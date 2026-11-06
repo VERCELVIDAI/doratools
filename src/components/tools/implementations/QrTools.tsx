@@ -1,73 +1,87 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import { QrCode, Download, Wifi, PhoneCall, Mail, FileText, Check, Copy } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import QRCode from "qrcode";
+import { Download, Wifi, PhoneCall, Mail, Check, Copy } from "lucide-react";
 import { recordToolActivity } from "@/lib/store";
 
-// Dynamic QRCodeJS loader
-async function loadQrLibrary(): Promise<any> {
-  if (typeof window === "undefined") return null;
-  if ((window as any).QRCode) return (window as any).QRCode;
+function QrPreviewCard({ dataUrl, title, onDownload }: { dataUrl: string; title: string; onDownload: () => void }) {
+  const [copied, setCopied] = useState(false);
 
-  return new Promise((resolve, reject) => {
-    const existing = document.querySelector('script[src*="qrcode"]');
-    if (existing) {
-      existing.addEventListener("load", () => resolve((window as any).QRCode));
-      return;
+  const handleCopy = async () => {
+    try {
+      const res = await fetch(dataUrl);
+      const blob = await res.blob();
+      await navigator.clipboard.write([
+        new ClipboardItem({ "image/png": blob })
+      ]);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback
     }
-    const script = document.createElement("script");
-    script.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js";
-    script.onload = () => resolve((window as any).QRCode);
-    script.onerror = () => reject(new Error("Failed to load QR engine."));
-    document.head.appendChild(script);
-  });
-}
+  };
 
-function renderQrToCanvas(container: HTMLDivElement, text: string, color: string = "#17324D") {
-  container.innerHTML = "";
-  loadQrLibrary()
-    .then((QRCode) => {
-      new QRCode(container, {
-        text,
-        width: 240,
-        height: 240,
-        colorDark: color,
-        colorLight: "#FFFFFF",
-        correctLevel: 2, // H level
-      });
-    })
-    .catch(() => {
-      // Fallback display
-      container.innerHTML = `<div class="p-4 bg-slate-100 rounded-xl text-xs font-bold text-slate-600">QR Engine Ready</div>`;
-    });
+  return (
+    <div className="flex flex-col items-center justify-center p-6 bg-[#F8FBFF] border border-dora-border rounded-3xl">
+      <div className="p-4 bg-white rounded-2xl shadow-xs border border-slate-100 flex items-center justify-center min-w-[200px] min-h-[200px]">
+        {dataUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={dataUrl} alt={title} className="w-52 h-52 object-contain" />
+        ) : (
+          <div className="w-5 h-5 border-2 border-dora-blue border-t-transparent rounded-full animate-spin" />
+        )}
+      </div>
+
+      <div className="mt-4 flex items-center gap-2">
+        <button
+          onClick={onDownload}
+          className="px-4 py-2 rounded-xl bg-dora-blue text-white text-xs font-bold hover:bg-dora-deep flex items-center gap-1.5 transition-colors shadow-xs"
+        >
+          <Download className="w-3.5 h-3.5" />
+          <span>Download PNG</span>
+        </button>
+        <button
+          onClick={handleCopy}
+          className="px-3 py-2 rounded-xl bg-white border border-dora-border text-dora-text text-xs font-bold hover:bg-slate-50 flex items-center gap-1.5 transition-colors"
+        >
+          {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-slate-500" />}
+          <span>{copied ? "Copied!" : "Copy"}</span>
+        </button>
+      </div>
+      <span className="text-[11px] text-dora-textLight mt-2 font-semibold">Instant Live Camera Scan</span>
+    </div>
+  );
 }
 
 // 31. URL QR GENERATOR
 export function UrlQrTool() {
-  const [url, setUrl] = useState("https://doratools.online");
+  const [url, setUrl] = useState("https://www.doratools.online");
   const [color, setColor] = useState("#168DE2");
-  const qrRef = useRef<HTMLDivElement>(null);
+  const [qrDataUrl, setQrDataUrl] = useState("");
 
   useEffect(() => {
-    if (qrRef.current && url) {
-      renderQrToCanvas(qrRef.current, url, color);
+    if (url) {
+      QRCode.toDataURL(url, {
+        width: 300,
+        margin: 2,
+        color: { dark: color, light: "#FFFFFF" },
+      }).then(setQrDataUrl).catch(() => {});
     }
   }, [url, color]);
 
   const downloadQr = () => {
-    const img = qrRef.current?.querySelector("img");
-    if (img && img.src) {
-      const a = document.createElement("a");
-      a.href = img.src;
-      a.download = "url-qr.png";
-      a.click();
-      recordToolActivity({
-        toolSlug: "url-qr-generator",
-        toolName: "URL QR Generator",
-        categoryName: "QR Tools",
-        summary: `Created QR code for ${url}`,
-      });
-    }
+    if (!qrDataUrl) return;
+    const a = document.createElement("a");
+    a.href = qrDataUrl;
+    a.download = "url-qr.png";
+    a.click();
+    recordToolActivity({
+      toolSlug: "url-qr-generator",
+      toolName: "URL QR Generator",
+      categoryName: "QR Tools",
+      summary: `Created QR code for ${url}`,
+    });
   };
 
   return (
@@ -82,7 +96,7 @@ export function UrlQrTool() {
               type="text"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl border border-dora-border bg-[#F8FBFF] text-xs font-medium text-dora-text"
+              className="w-full px-4 py-2.5 rounded-xl border border-dora-border bg-[#F8FBFF] text-xs font-medium text-dora-text focus:outline-none"
             />
           </div>
 
@@ -98,20 +112,9 @@ export function UrlQrTool() {
               <span className="text-xs font-mono font-bold text-dora-text">{color}</span>
             </div>
           </div>
-
-          <button
-            onClick={downloadQr}
-            className="px-6 py-2.5 rounded-xl bg-dora-blue text-white font-bold text-xs hover:bg-dora-deep flex items-center gap-2"
-          >
-            <Download className="w-4 h-4" />
-            <span>Download High-Res PNG</span>
-          </button>
         </div>
 
-        <div className="flex flex-col items-center justify-center p-6 bg-[#F8FBFF] border border-dora-border rounded-3xl">
-          <div ref={qrRef} className="p-4 bg-white rounded-2xl shadow-xs" />
-          <span className="text-[11px] text-dora-textLight mt-3 font-semibold">Instant Live Camera Scan</span>
-        </div>
+        <QrPreviewCard dataUrl={qrDataUrl} title="URL QR" onDownload={downloadQr} />
       </div>
     </div>
   );
@@ -119,14 +122,32 @@ export function UrlQrTool() {
 
 // 32. TEXT QR GENERATOR
 export function TextQrTool() {
-  const [text, setText] = useState("Dora Tools — Digital Gadget Universe");
-  const qrRef = useRef<HTMLDivElement>(null);
+  const [text, setText] = useState("Dora Tools — Digital Gadget Universe!");
+  const [qrDataUrl, setQrDataUrl] = useState("");
 
   useEffect(() => {
-    if (qrRef.current && text) {
-      renderQrToCanvas(qrRef.current, text, "#17324D");
+    if (text) {
+      QRCode.toDataURL(text, {
+        width: 300,
+        margin: 2,
+        color: { dark: "#17324D", light: "#FFFFFF" },
+      }).then(setQrDataUrl).catch(() => {});
     }
   }, [text]);
+
+  const downloadQr = () => {
+    if (!qrDataUrl) return;
+    const a = document.createElement("a");
+    a.href = qrDataUrl;
+    a.download = "text-qr.png";
+    a.click();
+    recordToolActivity({
+      toolSlug: "text-qr-generator",
+      toolName: "Text QR Generator",
+      categoryName: "QR Tools",
+      summary: `Created Text QR Code`,
+    });
+  };
 
   return (
     <div className="p-6 sm:p-8 rounded-3xl bg-white border border-dora-border shadow-dora-card space-y-6">
@@ -137,12 +158,10 @@ export function TextQrTool() {
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
-            className="w-full h-32 px-4 py-2.5 rounded-xl border border-dora-border bg-[#F8FBFF] text-xs font-medium"
+            className="w-full h-32 px-4 py-2.5 rounded-xl border border-dora-border bg-[#F8FBFF] text-xs font-medium focus:outline-none"
           />
         </div>
-        <div className="flex justify-center p-6 bg-[#F8FBFF] border border-dora-border rounded-3xl">
-          <div ref={qrRef} className="p-4 bg-white rounded-2xl shadow-xs" />
-        </div>
+        <QrPreviewCard dataUrl={qrDataUrl} title="Text QR" onDownload={downloadQr} />
       </div>
     </div>
   );
@@ -154,15 +173,31 @@ export function WifiQrTool() {
   const [password, setPassword] = useState("magicgadget2026");
   const [encryption, setEncryption] = useState("WPA");
   const [hidden, setHidden] = useState(false);
-  const qrRef = useRef<HTMLDivElement>(null);
+  const [qrDataUrl, setQrDataUrl] = useState("");
 
   const wifiPayload = `WIFI:T:${encryption};S:${ssid};P:${password};H:${hidden ? "true" : "false"};;`;
 
   useEffect(() => {
-    if (qrRef.current) {
-      renderQrToCanvas(qrRef.current, wifiPayload, "#0866B2");
-    }
+    QRCode.toDataURL(wifiPayload, {
+      width: 300,
+      margin: 2,
+      color: { dark: "#0866B2", light: "#FFFFFF" },
+    }).then(setQrDataUrl).catch(() => {});
   }, [wifiPayload]);
+
+  const downloadQr = () => {
+    if (!qrDataUrl) return;
+    const a = document.createElement("a");
+    a.href = qrDataUrl;
+    a.download = `${ssid}-wifi-qr.png`;
+    a.click();
+    recordToolActivity({
+      toolSlug: "wifi-qr-generator",
+      toolName: "WiFi QR Generator",
+      categoryName: "QR Tools",
+      summary: `Created WiFi QR for ${ssid}`,
+    });
+  };
 
   return (
     <div className="p-6 sm:p-8 rounded-3xl bg-white border border-dora-border shadow-dora-card space-y-6">
@@ -177,7 +212,7 @@ export function WifiQrTool() {
               type="text"
               value={ssid}
               onChange={(e) => setSsid(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl border border-dora-border bg-[#F8FBFF] text-xs font-medium"
+              className="w-full px-4 py-2.5 rounded-xl border border-dora-border bg-[#F8FBFF] text-xs font-medium focus:outline-none"
             />
           </div>
           <div>
@@ -186,7 +221,7 @@ export function WifiQrTool() {
               type="text"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl border border-dora-border bg-[#F8FBFF] text-xs font-medium"
+              className="w-full px-4 py-2.5 rounded-xl border border-dora-border bg-[#F8FBFF] text-xs font-medium focus:outline-none"
             />
           </div>
           <div>
@@ -203,12 +238,14 @@ export function WifiQrTool() {
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-center p-6 bg-[#F8FBFF] border border-dora-border rounded-3xl">
-          <div ref={qrRef} className="p-4 bg-white rounded-2xl shadow-xs" />
-          <span className="text-xs font-bold text-dora-deep mt-3 flex items-center gap-1">
-            <Wifi className="w-3.5 h-3.5" />
-            <span>Connect to {ssid}</span>
-          </span>
+        <div className="space-y-2">
+          <QrPreviewCard dataUrl={qrDataUrl} title="WiFi QR" onDownload={downloadQr} />
+          <div className="text-center">
+            <span className="text-xs font-bold text-dora-deep inline-flex items-center gap-1">
+              <Wifi className="w-3.5 h-3.5 text-dora-blue" />
+              <span>Connect to {ssid}</span>
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -219,16 +256,32 @@ export function WifiQrTool() {
 export function WhatsappQrTool() {
   const [phone, setPhone] = useState("+919876543210");
   const [message, setMessage] = useState("Hi! I'd like to ask about your services.");
-  const qrRef = useRef<HTMLDivElement>(null);
+  const [qrDataUrl, setQrDataUrl] = useState("");
 
   const cleanPhone = phone.replace(/[^0-9]/g, "");
   const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
 
   useEffect(() => {
-    if (qrRef.current) {
-      renderQrToCanvas(qrRef.current, waUrl, "#059669");
-    }
+    QRCode.toDataURL(waUrl, {
+      width: 300,
+      margin: 2,
+      color: { dark: "#059669", light: "#FFFFFF" },
+    }).then(setQrDataUrl).catch(() => {});
   }, [waUrl]);
+
+  const downloadQr = () => {
+    if (!qrDataUrl) return;
+    const a = document.createElement("a");
+    a.href = qrDataUrl;
+    a.download = "whatsapp-qr.png";
+    a.click();
+    recordToolActivity({
+      toolSlug: "whatsapp-qr-generator",
+      toolName: "WhatsApp QR Generator",
+      categoryName: "QR Tools",
+      summary: `Created WhatsApp QR for ${phone}`,
+    });
+  };
 
   return (
     <div className="p-6 sm:p-8 rounded-3xl bg-white border border-dora-border shadow-dora-card space-y-6">
@@ -242,7 +295,7 @@ export function WhatsappQrTool() {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="e.g. +91 9876543210"
-              className="w-full px-4 py-2.5 rounded-xl border border-dora-border bg-[#F8FBFF] text-xs font-medium"
+              className="w-full px-4 py-2.5 rounded-xl border border-dora-border bg-[#F8FBFF] text-xs font-medium focus:outline-none"
             />
           </div>
           <div>
@@ -250,16 +303,18 @@ export function WhatsappQrTool() {
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="w-full h-24 px-4 py-2.5 rounded-xl border border-dora-border bg-[#F8FBFF] text-xs font-medium"
+              className="w-full h-24 px-4 py-2.5 rounded-xl border border-dora-border bg-[#F8FBFF] text-xs font-medium focus:outline-none"
             />
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center p-6 bg-[#F8FBFF] border border-dora-border rounded-3xl">
-          <div ref={qrRef} className="p-4 bg-white rounded-2xl shadow-xs" />
-          <span className="text-xs font-bold text-emerald-700 mt-3 flex items-center gap-1">
-            <PhoneCall className="w-3.5 h-3.5" />
-            <span>Chat on WhatsApp</span>
-          </span>
+        <div className="space-y-2">
+          <QrPreviewCard dataUrl={qrDataUrl} title="WhatsApp QR" onDownload={downloadQr} />
+          <div className="text-center">
+            <span className="text-xs font-bold text-emerald-700 inline-flex items-center gap-1">
+              <PhoneCall className="w-3.5 h-3.5" />
+              <span>Direct WhatsApp Chat</span>
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -270,15 +325,31 @@ export function WhatsappQrTool() {
 export function EmailQrTool() {
   const [email, setEmail] = useState("support@doratools.online");
   const [subject, setSubject] = useState("Inquiry regarding Dora Tools");
-  const qrRef = useRef<HTMLDivElement>(null);
+  const [qrDataUrl, setQrDataUrl] = useState("");
 
   const mailto = `mailto:${email}?subject=${encodeURIComponent(subject)}`;
 
   useEffect(() => {
-    if (qrRef.current) {
-      renderQrToCanvas(qrRef.current, mailto, "#7C3AED");
-    }
+    QRCode.toDataURL(mailto, {
+      width: 300,
+      margin: 2,
+      color: { dark: "#7C3AED", light: "#FFFFFF" },
+    }).then(setQrDataUrl).catch(() => {});
   }, [mailto]);
+
+  const downloadQr = () => {
+    if (!qrDataUrl) return;
+    const a = document.createElement("a");
+    a.href = qrDataUrl;
+    a.download = "email-qr.png";
+    a.click();
+    recordToolActivity({
+      toolSlug: "email-qr-generator",
+      toolName: "Email QR Generator",
+      categoryName: "QR Tools",
+      summary: `Created Email QR for ${email}`,
+    });
+  };
 
   return (
     <div className="p-6 sm:p-8 rounded-3xl bg-white border border-dora-border shadow-dora-card space-y-6">
@@ -291,7 +362,7 @@ export function EmailQrTool() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl border border-dora-border bg-[#F8FBFF] text-xs font-medium"
+              className="w-full px-4 py-2.5 rounded-xl border border-dora-border bg-[#F8FBFF] text-xs font-medium focus:outline-none"
             />
           </div>
           <div>
@@ -300,16 +371,18 @@ export function EmailQrTool() {
               type="text"
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl border border-dora-border bg-[#F8FBFF] text-xs font-medium"
+              className="w-full px-4 py-2.5 rounded-xl border border-dora-border bg-[#F8FBFF] text-xs font-medium focus:outline-none"
             />
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center p-6 bg-[#F8FBFF] border border-dora-border rounded-3xl">
-          <div ref={qrRef} className="p-4 bg-white rounded-2xl shadow-xs" />
-          <span className="text-xs font-bold text-purple-700 mt-3 flex items-center gap-1">
-            <Mail className="w-3.5 h-3.5" />
-            <span>Compose to {email}</span>
-          </span>
+        <div className="space-y-2">
+          <QrPreviewCard dataUrl={qrDataUrl} title="Email QR" onDownload={downloadQr} />
+          <div className="text-center">
+            <span className="text-xs font-bold text-purple-700 inline-flex items-center gap-1">
+              <Mail className="w-3.5 h-3.5" />
+              <span>Compose to {email}</span>
+            </span>
+          </div>
         </div>
       </div>
     </div>

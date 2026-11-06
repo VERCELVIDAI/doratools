@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Clock, Calendar, User, Sparkles, Share2 } from "lucide-react";
 import { getBlogPostBySlug, BLOG_POSTS } from "@/lib/blogs-data";
@@ -8,14 +9,43 @@ export async function generateStaticParams() {
   return BLOG_POSTS.map((p) => ({ slug: p.slug }));
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }) {
+export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
   const post = getBlogPostBySlug(params.slug);
   if (!post) return { title: "Article Not Found | Dora Tools" };
 
+  const url = `https://www.doratools.online/blog/${post.slug}`;
+
   return {
-    title: `${post.title} | Dora Tools Blog`,
+    title: `${post.title} | Dora Tools Blog & Guides`,
     description: post.excerpt,
     keywords: post.seo.keywords,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title: `${post.title} | Dora Tools`,
+      description: post.excerpt,
+      url,
+      siteName: "Dora Tools",
+      locale: "en_US",
+      type: "article",
+      publishedTime: post.publishedAt,
+      authors: [post.author.name],
+      images: [
+        {
+          url: "/og-image.png",
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt,
+      images: ["/og-image.png"],
+    },
   };
 }
 
@@ -23,8 +53,67 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
   const post = getBlogPostBySlug(params.slug);
   if (!post) return notFound();
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BlogPosting",
+        "headline": post.title,
+        "description": post.excerpt,
+        "datePublished": post.publishedAt,
+        "dateModified": post.publishedAt,
+        "author": {
+          "@type": "Person",
+          "name": post.author.name,
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Dora Tools",
+          "url": "https://www.doratools.online",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.doratools.online/favicon.svg",
+          },
+        },
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": `https://www.doratools.online/blog/${post.slug}`,
+        },
+        "image": "https://www.doratools.online/og-image.png",
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.doratools.online",
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Blog",
+            "item": "https://www.doratools.online/blog",
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": post.title,
+            "item": `https://www.doratools.online/blog/${post.slug}`,
+          },
+        ],
+      },
+    ],
+  };
+
   return (
-    <div className="py-12 bg-[#F5FAFF] min-h-screen">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <div className="py-12 bg-[#F5FAFF] min-h-screen">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back Link */}
         <div className="mb-6">
@@ -81,5 +170,6 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
         </article>
       </div>
     </div>
+    </>
   );
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Sparkles, ArrowRight, ShieldCheck, CheckCircle } from "lucide-react";
 import { getCategoryBySlug, CATEGORIES } from "@/lib/categories-data";
@@ -12,12 +13,40 @@ export async function generateStaticParams() {
   }));
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }) {
+export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
   const cat = getCategoryBySlug(params.slug);
   if (!cat) return { title: "Category Not Found | Dora Tools" };
+
+  const url = `https://www.doratools.online/categories/${cat.slug}`;
+
   return {
-    title: `${cat.name} (${cat.gadgetName}) | Dora Tools`,
-    description: cat.description,
+    title: `${cat.name} (${cat.gadgetName}) — Free Online Gadgets | Dora Tools`,
+    description: `${cat.description} Explore all ${cat.toolCount} free tools with 100% private in-browser processing.`,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title: `${cat.name} (${cat.gadgetName}) | Dora Tools`,
+      description: cat.description,
+      url,
+      siteName: "Dora Tools",
+      locale: "en_US",
+      type: "website",
+      images: [
+        {
+          url: "/og-image.png",
+          width: 1200,
+          height: 630,
+          alt: `${cat.name} - Dora Tools`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${cat.name} (${cat.gadgetName}) | Dora Tools`,
+      description: cat.description,
+      images: ["/og-image.png"],
+    },
   };
 }
 
@@ -27,8 +56,54 @@ export default function CategoryDetailPage({ params }: { params: { slug: string 
 
   const categoryTools = getToolsByCategory(category.slug);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "name": `${category.name} (${category.gadgetName})`,
+        "url": `https://www.doratools.online/categories/${category.slug}`,
+        "description": category.description,
+        "hasPart": categoryTools.map((t) => ({
+          "@type": "SoftwareApplication",
+          "name": t.name,
+          "url": `https://www.doratools.online/tools/${t.slug}`,
+          "description": t.shortDesc,
+        })),
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.doratools.online",
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Categories",
+            "item": "https://www.doratools.online/categories",
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": category.name,
+            "item": `https://www.doratools.online/categories/${category.slug}`,
+          },
+        ],
+      },
+    ],
+  };
+
   return (
-    <div className="py-12 bg-[#F5FAFF] min-h-screen">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <div className="py-12 bg-[#F5FAFF] min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back breadcrumb */}
         <div className="mb-6">
@@ -113,5 +188,6 @@ export default function CategoryDetailPage({ params }: { params: { slug: string 
         </div>
       </div>
     </div>
+    </>
   );
 }

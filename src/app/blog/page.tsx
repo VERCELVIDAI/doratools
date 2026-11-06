@@ -3,9 +3,37 @@ import Link from "next/link";
 import { Sparkles, ArrowRight, BookOpen, Clock, User } from "lucide-react";
 import { BLOG_POSTS } from "@/lib/blogs-data";
 
-export const metadata = {
-  title: "Gadget Academy & Blog | Dora Tools",
-  description: "Tutorials, technical architectural deep dives, and practical productivity guides on digital gadgets, SEO, and client-side processing.",
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Gadget Academy & Blog — Tutorials, Guides & Security Deep Dives | Dora Tools",
+  description:
+    "Explore tutorials, technical deep dives, and practical productivity guides on browser privacy, PDF optimization, image compression, developer tools, and client-side processing.",
+  alternates: {
+    canonical: "https://www.doratools.online/blog",
+  },
+  openGraph: {
+    title: "Gadget Academy & Blog | Dora Tools",
+    description: "Guides, tutorials, and engineering deep dives on digital gadgets and browser privacy.",
+    url: "https://www.doratools.online/blog",
+    siteName: "Dora Tools",
+    locale: "en_US",
+    type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Dora Tools Academy Blog",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Gadget Academy & Blog | Dora Tools",
+    description: "Tutorials & guides on digital gadgets and client-side productivity.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function BlogListingPage() {

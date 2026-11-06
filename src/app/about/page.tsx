@@ -2,9 +2,37 @@ import React from "react";
 import { Sparkles, Shield, Zap, Globe, Heart } from "lucide-react";
 import { DoraBot } from "@/components/mascot/DoraBot";
 
-export const metadata = {
-  title: "About Us | Dora Tools",
-  description: "Learn about the mission, philosophy, and architectural vision behind Dora Tools.",
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About Dora Tools — Our Mission & Magical Gadget Vision",
+  description:
+    "Learn about the mission, client-side privacy philosophy, and multidisciplinary engineering behind Dora Tools — Your Digital Gadget Universe.",
+  alternates: {
+    canonical: "https://www.doratools.online/about",
+  },
+  openGraph: {
+    title: "About Dora Tools — Your Digital Gadget Universe!",
+    description: "Our mission to provide 50 magical digital gadgets with 100% in-browser privacy.",
+    url: "https://www.doratools.online/about",
+    siteName: "Dora Tools",
+    locale: "en_US",
+    type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "About Dora Tools",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About Dora Tools",
+    description: "50 magical digital gadgets with 100% in-browser privacy.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function AboutPage() {

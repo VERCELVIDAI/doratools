@@ -1,4 +1,5 @@
 import React from "react";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getToolBySlug, TOOLS } from "@/lib/tools-data";
 import { ToolLayout } from "@/components/tools/ToolLayout";
@@ -97,17 +98,40 @@ export async function generateStaticParams() {
   return TOOLS.map((t) => ({ slug: t.slug }));
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }) {
+export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
   const tool = getToolBySlug(params.slug);
   if (!tool) return { title: "Tool Not Found | Dora Tools" };
 
+  const url = `https://www.doratools.online/tools/${tool.slug}`;
+
   return {
     title: `${tool.name} — Free Online ${tool.gadgetName} | Dora Tools`,
-    description: tool.description,
-    keywords: tool.tags,
+    description: `${tool.description} 100% private in-browser processing, fast & secure.`,
+    keywords: [...tool.tags, tool.name, tool.gadgetName, tool.categoryName, "free online tool", "dora tools"],
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
+      title: `${tool.name} — Free Online ${tool.gadgetName} | Dora Tools`,
+      description: tool.shortDesc,
+      url,
+      siteName: "Dora Tools",
+      locale: "en_US",
+      type: "website",
+      images: [
+        {
+          url: "/og-image.png",
+          width: 1200,
+          height: 630,
+          alt: `${tool.name} - Dora Tools`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
       title: `${tool.name} | Dora Tools`,
       description: tool.shortDesc,
+      images: ["/og-image.png"],
     },
   };
 }
@@ -243,5 +267,70 @@ export default function ToolPage({ params }: { params: { slug: string } }) {
     }
   };
 
-  return <ToolLayout tool={tool}>{renderToolComponent()}</ToolLayout>;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": tool.name,
+        "operatingSystem": "All",
+        "applicationCategory": "UtilitiesApplication",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+        },
+        "description": tool.description,
+        "featureList": tool.features,
+        "softwareHelp": {
+          "@type": "CreativeWork",
+          "url": `https://www.doratools.online/tools/${tool.slug}`,
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.doratools.online",
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Tools",
+            "item": "https://www.doratools.online/tools",
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": tool.name,
+            "item": `https://www.doratools.online/tools/${tool.slug}`,
+          },
+        ],
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": tool.faqs.map((faq) => ({
+          "@type": "Question",
+          "name": faq.question,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": faq.answer,
+          },
+        })),
+      },
+    ],
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <ToolLayout tool={tool}>{renderToolComponent()}</ToolLayout>
+    </>
+  );
 }

@@ -2,9 +2,22 @@ import React from "react";
 import Link from "next/link";
 import { HelpCircle, BookOpen, Shield, MessageSquare, ArrowRight } from "lucide-react";
 
-export const metadata = {
-  title: "Help Center | Dora Tools",
-  description: "Browse guides, documentation, and troubleshooting tips for Dora Tools.",
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Help Center & Documentation | Dora Tools",
+  description:
+    "Browse guides, documentation, security architecture, and troubleshooting tips for all 50 Dora Tools gadgets.",
+  alternates: {
+    canonical: "https://www.doratools.online/help",
+  },
+  openGraph: {
+    title: "Help Center & Documentation | Dora Tools",
+    description: "Documentation and help guides for Dora Tools.",
+    url: "https://www.doratools.online/help",
+    siteName: "Dora Tools",
+    images: [{ url: "/og-image.png", width: 1200, height: 630 }],
+  },
 };
 
 export default function HelpPage() {

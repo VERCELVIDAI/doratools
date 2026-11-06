@@ -5,9 +5,37 @@ import { CATEGORIES } from "@/lib/categories-data";
 import { getToolsByCategory } from "@/lib/tools-data";
 import { GadgetIllustration } from "@/components/illustrations/GadgetIllustrations";
 
-export const metadata = {
-  title: "Gadget Categories | Dora Tools",
-  description: "Browse all 10 specialized gadget categories across PDFs, images, code, calculators, SEO, and productivity.",
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "10 Specialized Gadget Categories — PDF, Image, Code & Calculators | Dora Tools",
+  description:
+    "Explore 10 specialized gadget categories across PDFs, images, code, calculators, SEO, QR codes, file converters, and productivity tools. 100% private in-browser processing.",
+  alternates: {
+    canonical: "https://www.doratools.online/categories",
+  },
+  openGraph: {
+    title: "10 Specialized Gadget Categories | Dora Tools",
+    description: "Browse 10 gadget universes covering 50 free online client-side tools.",
+    url: "https://www.doratools.online/categories",
+    siteName: "Dora Tools",
+    locale: "en_US",
+    type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Dora Tools Categories",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "10 Specialized Gadget Categories | Dora Tools",
+    description: "Explore 10 gadget categories with 50 free tools.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function CategoriesPage() {

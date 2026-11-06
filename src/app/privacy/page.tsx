@@ -1,9 +1,22 @@
 import React from "react";
 import { Shield } from "lucide-react";
 
-export const metadata = {
-  title: "Privacy Policy | Dora Tools",
-  description: "Privacy policy for Dora Tools. Discover how our client-side architecture keeps your files completely private.",
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy — 100% Client-Side Privacy Guarantee | Dora Tools",
+  description:
+    "Privacy policy for Dora Tools. Discover how our client-side architecture keeps your documents, images, and data completely private with zero file uploads.",
+  alternates: {
+    canonical: "https://www.doratools.online/privacy",
+  },
+  openGraph: {
+    title: "Privacy Policy | Dora Tools",
+    description: "Learn how Dora Tools protects your files with 100% in-browser processing.",
+    url: "https://www.doratools.online/privacy",
+    siteName: "Dora Tools",
+    images: [{ url: "/og-image.png", width: 1200, height: 630 }],
+  },
 };
 
 export default function PrivacyPage() {

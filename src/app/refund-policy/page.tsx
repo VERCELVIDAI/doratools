@@ -1,8 +1,18 @@
 import React from "react";
+import { Metadata } from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Refund & Cancellation Policy | Dora Tools",
-  description: "Refund and subscription cancellation guidelines for Dora Tools.",
+  description: "Transparent refund and subscription cancellation guidelines for Dora Tools.",
+  alternates: {
+    canonical: "https://www.doratools.online/refund-policy",
+  },
+  openGraph: {
+    title: "Refund & Cancellation Policy | Dora Tools",
+    url: "https://www.doratools.online/refund-policy",
+    siteName: "Dora Tools",
+    images: [{ url: "/og-image.png", width: 1200, height: 630 }],
+  },
 };
 
 export default function RefundPolicyPage() {

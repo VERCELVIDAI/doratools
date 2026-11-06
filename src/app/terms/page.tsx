@@ -1,8 +1,18 @@
 import React from "react";
+import { Metadata } from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Terms of Service | Dora Tools",
   description: "Terms of service and acceptable use agreement for Dora Tools.",
+  alternates: {
+    canonical: "https://www.doratools.online/terms",
+  },
+  openGraph: {
+    title: "Terms of Service | Dora Tools",
+    url: "https://www.doratools.online/terms",
+    siteName: "Dora Tools",
+    images: [{ url: "/og-image.png", width: 1200, height: 630 }],
+  },
 };
 
 export default function TermsPage() {
