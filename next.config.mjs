@@ -5,7 +5,6 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  serverExternalPackages: ['bcryptjs', 'pdf-lib'],
   experimental: {
     serverComponentsExternalPackages: ['bcryptjs', 'pdf-lib'],
   },
