@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-blue: #168DE2;
+  --deep-blue: #0866B2;
+  --sky-blue: #64C8FF;
+  --background: #F5FAFF;
+  --white: #FFFFFF;
+  --accent-yellow: #FFD84D;
+  --primary-text: #17324D;
+  --secondary-text: #718096;
+  --border: #DDEEFF;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--primary-text);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  overflow-x: hidden;
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(221, 238, 255, 0.8);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  border: 1px solid #DDEEFF;
+  box-shadow: 0 8px 30px -4px rgba(22, 141, 226, 0.1);
+}
+
+.glass-card:hover {
+  box-shadow: 0 20px 40px -8px rgba(22, 141, 226, 0.2);
+}
+
+/* Custom magical scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F0F7FF;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #64C8FF;
+  border-radius: 9999px;
+  border: 2px solid #F0F7FF;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #168DE2;
+}
+
+/* Print Rules for Invoices, Receipts & Resumes */
+@media print {
+  header, footer, nav, .no-print, button, .sidebar {
+    display: none !important;
+  }
+  body, .printable-area {
+    background: white !important;
+    color: black !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .printable-card {
+    border: none !important;
+    box-shadow: none !important;
+  }
+}

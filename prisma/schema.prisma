@@ -1,0 +1,398 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum RoleType {
+  USER
+  ADMIN
+  SUPPORT
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELLED
+  EXPIRED
+}
+
+enum BillingPeriod {
+  MONTHLY
+  YEARLY
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model User {
+  id            String             @id @default(cuid())
+  email         String             @unique
+  name          String?
+  passwordHash  String
+  avatarUrl     String?
+  role          RoleType           @default(USER)
+  emailVerified DateTime?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  profile       UserProfile?
+  subscription  UserSubscription?
+  payments      Payment[]
+  redemptions   CouponRedemption[]
+  toolUsages    ToolUsage[]
+  savedProjects SavedProject[]
+  favorites     UserFavorite[]
+  activityLogs  ActivityLog[]
+  tickets       SupportTicket[]
+  notifications Notification[]
+  teamMembers   TeamMember[]
+
+  @@index([email])
+}
+
+model UserProfile {
+  id               String   @id @default(cuid())
+  userId           String   @unique
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company          String?
+  phone            String?
+  bio              String?
+  website          String?
+  country          String   @default("IN")
+  themePreference String   @default("light")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Role {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  description String?
+  permissions Permission[]
+  createdAt   DateTime     @default(now())
+}
+
+model Permission {
+  id          String   @id @default(cuid())
+  action      String   @unique // e.g. "tools:manage", "users:suspend"
+  description String?
+  roles       Role[]
+  createdAt   DateTime @default(now())
+}
+
+model ToolCategory {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  gadgetName  String
+  tagline     String
+  description String
+  icon        String
+  color       String
+  sortOrder   Int      @default(0)
+  tools       Tool[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([slug])
+}
+
+model Tool {
+  id             String         @id @default(cuid())
+  slug           String         @unique
+  name           String
+  shortDesc      String
+  description    String
+  categoryId     String
+  category       ToolCategory   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  icon           String
+  tags           String[]
+  isPopular      Boolean        @default(false)
+  isNew          Boolean        @default(false)
+  isPremium      Boolean        @default(false)
+  maxFileSizeMB  Int            @default(25)
+  howToUse       String[]
+  features       String[]
+  faqs           Json           @default("[]")
+  sortOrder      Int            @default(0)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  usages         ToolUsage[]
+  favorites      UserFavorite[]
+  savedProjects  SavedProject[]
+
+  @@index([slug])
+  @@index([categoryId])
+}
+
+model SubscriptionPlan {
+  id                   String             @id // "free", "starter", "pro", "business"
+  name                 String
+  tagline              String
+  priceMonthly         Int
+  priceYearly          Int
+  bulkOpsLimitPerDay   Int
+  savedProjectsLimit   Int
+  historyRetentionDays Int
+  teamMembersLimit     Int
+  customBranding       Boolean            @default(false)
+  prioritySupport      Boolean            @default(false)
+  isPopular            Boolean            @default(false)
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  subscriptions        UserSubscription[]
+}
+
+model UserSubscription {
+  id                   String             @id @default(cuid())
+  userId               String             @unique
+  user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planId               String
+  plan                 SubscriptionPlan   @relation(fields: [planId], references: [id])
+  billingPeriod        BillingPeriod      @default(MONTHLY)
+  status               SubscriptionStatus @default(ACTIVE)
+  currentPeriodStart   DateTime           @default(now())
+  currentPeriodEnd     DateTime
+  cancelAtPeriodEnd    Boolean            @default(false)
+  razorpaySubId        String?            @unique
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  @@index([userId])
+}
+
+model Payment {
+  id                String        @id @default(cuid())
+  userId            String
+  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amountINR         Int
+  status            PaymentStatus @default(PENDING)
+  razorpayOrderId   String        @unique
+  razorpayPaymentId String?       @unique
+  razorpaySignature String?
+  planId            String
+  billingPeriod     BillingPeriod @default(MONTHLY)
+  invoiceUrl        String?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  events            PaymentEvent[]
+
+  @@index([userId])
+  @@index([razorpayOrderId])
+}
+
+model PaymentEvent {
+  id        String   @id @default(cuid())
+  paymentId String
+  payment   Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  eventType String
+  payload   Json
+  createdAt DateTime @default(now())
+
+  @@index([paymentId])
+}
+
+model Coupon {
+  id             String             @id @default(cuid())
+  code           String             @unique
+  discountPct    Int
+  maxRedemptions Int                @default(1000)
+  usedCount      Int                @default(0)
+  expiresAt      DateTime?
+  isActive       Boolean            @default(true)
+  createdAt      DateTime           @default(now())
+
+  redemptions    CouponRedemption[]
+
+  @@index([code])
+}
+
+model CouponRedemption {
+  id         String   @id @default(cuid())
+  couponId   String
+  coupon     Coupon   @relation(fields: [couponId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  redeemedAt DateTime @default(now())
+
+  @@unique([couponId, userId])
+}
+
+model ToolUsage {
+  id            String   @id @default(cuid())
+  userId        String?
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  toolId        String
+  tool          Tool     @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  durationMs    Int      @default(0)
+  fileSizeBytes Int?
+  success       Boolean  @default(true)
+  createdAt     DateTime @default(now())
+
+  @@index([toolId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model UsageLimit {
+  id             String   @id @default(cuid())
+  userId         String
+  date           DateTime @db.Date
+  count          Int      @default(0)
+
+  @@unique([userId, date])
+}
+
+model SavedProject {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  toolId      String
+  tool        Tool     @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  data        Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model UserFavorite {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  toolId    String
+  tool      Tool     @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, toolId])
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  action    String
+  details   Json?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model BlogCategory {
+  id        String     @id @default(cuid())
+  name      String     @unique
+  slug      String     @unique
+  posts     BlogPost[]
+  createdAt DateTime   @default(now())
+}
+
+model BlogTag {
+  id        String     @id @default(cuid())
+  name      String     @unique
+  slug      String     @unique
+  posts     BlogPost[]
+  createdAt DateTime   @default(now())
+}
+
+model BlogPost {
+  id          String       @id @default(cuid())
+  slug        String       @unique
+  title       String
+  excerpt     String
+  content     String
+  coverImage  String
+  categoryId  String
+  category    BlogCategory @relation(fields: [categoryId], references: [id])
+  tags        BlogTag[]
+  authorName  String
+  authorRole  String
+  published   Boolean      @default(true)
+  publishedAt DateTime     @default(now())
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([slug])
+}
+
+model SupportTicket {
+  id        String         @id @default(cuid())
+  userId    String
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject   String
+  category  String
+  priority  TicketPriority @default(MEDIUM)
+  status    TicketStatus   @default(OPEN)
+  messages  Json           @default("[]")
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@index([userId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  content   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Team {
+  id          String       @id @default(cuid())
+  name        String
+  ownerId     String
+  members     TeamMember[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  teamId    String
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      String   @default("member") // owner, editor, viewer
+  createdAt DateTime @default(now())
+
+  @@unique([teamId, userId])
+}
+
+model WebsiteSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}
