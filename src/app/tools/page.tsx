@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Search, Sparkles, Star, ArrowRight, Filter, SlidersHorizontal } from "lucide-react";
@@ -9,7 +9,7 @@ import { CATEGORIES } from "@/lib/categories-data";
 import { GadgetIllustration } from "@/components/illustrations/GadgetIllustrations";
 import { toggleFavorite, isFavorite } from "@/lib/store";
 
-export default function ToolsDirectoryPage() {
+function ToolsDirectoryContent() {
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get("q") || "";
   const initialCategory = searchParams.get("cat") || "all";
@@ -253,5 +253,22 @@ export default function ToolsDirectoryPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function ToolsDirectoryPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#F5FAFF] flex items-center justify-center p-8">
+          <div className="flex items-center gap-3 text-dora-blue font-bold">
+            <div className="w-5 h-5 border-2 border-dora-blue border-t-transparent rounded-full animate-spin" />
+            <span>Loading Dora Tools Directory...</span>
+          </div>
+        </div>
+      }
+    >
+      <ToolsDirectoryContent />
+    </Suspense>
   );
 }
