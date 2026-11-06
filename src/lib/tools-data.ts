@@ -153,6 +153,246 @@ export const TOOLS: ToolItem[] = [
     supportedFormats: [".jpg", ".jpeg", ".png"],
     maxFileSizeMB: 40
   },
+  {
+    id: "tool-pdf-rotate",
+    slug: "pdf-rotate",
+    name: "Rotate PDF",
+    shortDesc: "Rotate PDF pages 90°, 180°, or 270° clockwise or counter-clockwise.",
+    category: "paper-portal",
+    categoryName: "PDF Tools",
+    gadgetName: "Paper Portal",
+    icon: "RotateCw",
+    tags: ["pdf", "rotate", "orientation", "turn"],
+    isPopular: true,
+    description: "Permanently fix inverted or landscape documents by rotating all or specific pages with instant browser execution.",
+    howToUse: [
+      "Upload your PDF document to the Paper Portal.",
+      "Choose rotation angle (+90°, +180°, or +270°).",
+      "Click 'Apply Rotation & Save PDF'.",
+      "Download your properly oriented document immediately."
+    ],
+    features: [
+      "90°, 180°, and 270° angle adjustments",
+      "Preserves original vector quality & fonts",
+      "Zero server uploads, 100% private",
+      "Fast single-click processing"
+    ],
+    faqs: [
+      { question: "Will rotating decrease document quality?", answer: "No, rotation is a lossless metadata modification that preserves 100% of the original vector clarity." }
+    ],
+    supportedFormats: [".pdf"],
+    maxFileSizeMB: 50
+  },
+  {
+    id: "tool-pdf-watermark",
+    slug: "pdf-watermark",
+    name: "Watermark PDF",
+    shortDesc: "Stamp custom text watermarks with opacity and diagonal rotation.",
+    category: "paper-portal",
+    categoryName: "PDF Tools",
+    gadgetName: "Paper Portal",
+    icon: "Stamp",
+    tags: ["pdf", "watermark", "stamp", "protect"],
+    isPopular: true,
+    description: "Protect intellectual property by stamping custom diagonal text watermarks (e.g. CONFIDENTIAL, DRAFT) across every page.",
+    howToUse: [
+      "Upload your PDF document.",
+      "Enter your desired watermark text.",
+      "Adjust transparency and styling.",
+      "Click 'Apply Watermark & Download'."
+    ],
+    features: [
+      "Customizable text and transparency slider",
+      "Diagonal 45-degree positioning for anti-piracy",
+      "Batch stamps across every page automatically",
+      "Client-side processing"
+    ],
+    faqs: [
+      { question: "Can watermarks be removed easily?", answer: "Watermarks are permanently rendered into the document stream." }
+    ],
+    supportedFormats: [".pdf"],
+    maxFileSizeMB: 50
+  },
+  {
+    id: "tool-pdf-page-numbers",
+    slug: "pdf-page-numbers",
+    name: "Page Numbers",
+    shortDesc: "Insert page numbers and headers/footers into your PDF.",
+    category: "paper-portal",
+    categoryName: "PDF Tools",
+    gadgetName: "Paper Portal",
+    icon: "Hash",
+    tags: ["pdf", "page numbers", "pagination", "header"],
+    isPopular: true,
+    description: "Add clean, professional numbering ('Page 1 of 10' or '1, 2, 3...') with customized position alignment.",
+    howToUse: [
+      "Upload your PDF document.",
+      "Select your numbering format and position (Bottom Right, Center).",
+      "Click 'Insert Page Numbers & Download'.",
+      "Save your newly paginated PDF."
+    ],
+    features: [
+      "Multiple format choices ('Page X of Y', 'X/Y', '1, 2, 3')",
+      "Bottom-right and bottom-center alignment",
+      "Automatic total page count detection",
+      "Clean typography matching professional standards"
+    ],
+    faqs: [
+      { question: "Does it cover existing text?", answer: "Page numbers are stamped in the standard margin zone (25px offset) to prevent overlapping." }
+    ],
+    supportedFormats: [".pdf"],
+    maxFileSizeMB: 50
+  },
+  {
+    id: "tool-sign-pdf",
+    slug: "sign-pdf",
+    name: "Sign PDF",
+    shortDesc: "Draw your signature on mobile touch screens or desktop and stamp it.",
+    category: "paper-portal",
+    categoryName: "PDF Tools",
+    gadgetName: "Paper Portal",
+    icon: "PenTool",
+    tags: ["pdf", "sign", "signature", "e-sign"],
+    isPopular: true,
+    description: "Draw your signature directly with your finger, stylus, or mouse on our interactive touch pad and stamp it onto your document.",
+    howToUse: [
+      "Upload the PDF you wish to sign.",
+      "Draw your handwritten signature on the touch signature pad.",
+      "Click 'Stamp Signature & Download'.",
+      "Save your legally executed signed PDF."
+    ],
+    features: [
+      "Touch screen finger-drawing optimized for mobile devices",
+      "Instant stroke smoothing and anti-aliasing",
+      "Zero server transmission of signature data",
+      "Stamps cleanly onto target signature line"
+    ],
+    faqs: [
+      { question: "Is my signature stored on your servers?", answer: "Never! All signatures are drawn directly on your local device canvas and embedded in memory." }
+    ],
+    supportedFormats: [".pdf"],
+    maxFileSizeMB: 50
+  },
+  {
+    id: "tool-pdf-protect",
+    slug: "pdf-protect",
+    name: "Protect PDF",
+    shortDesc: "Encrypt your PDF with password security.",
+    category: "paper-portal",
+    categoryName: "PDF Tools",
+    gadgetName: "Paper Portal",
+    icon: "Lock",
+    tags: ["pdf", "protect", "password", "encrypt"],
+    isPopular: false,
+    description: "Secure confidential business documents, contracts, and personal records with password encryption.",
+    howToUse: [
+      "Upload your PDF document.",
+      "Enter a strong password and confirm it.",
+      "Click 'Encrypt & Protect PDF'.",
+      "Download your secured document."
+    ],
+    features: [
+      "Password protection",
+      "Prevents unauthorized opening and copying",
+      "Fast browser encryption",
+      "100% private"
+    ],
+    faqs: [
+      { question: "Can Dora Tools recover my password if forgotten?", answer: "No, passwords are not stored anywhere for privacy reasons. Keep your password safe." }
+    ],
+    supportedFormats: [".pdf"],
+    maxFileSizeMB: 50
+  },
+  {
+    id: "tool-pdf-unlock",
+    slug: "pdf-unlock",
+    name: "Unlock PDF",
+    shortDesc: "Remove password security and restrictions from PDF files.",
+    category: "paper-portal",
+    categoryName: "PDF Tools",
+    gadgetName: "Paper Portal",
+    icon: "Unlock",
+    tags: ["pdf", "unlock", "decrypt", "remove password"],
+    isPopular: false,
+    description: "Strip passwords and editing restrictions from PDFs you own so you can share and print without entering credentials every time.",
+    howToUse: [
+      "Upload your password-protected PDF.",
+      "Enter the document password to authenticate.",
+      "Click 'Unlock & Decrypt PDF'.",
+      "Download the unrestricted PDF file."
+    ],
+    features: [
+      "Removes view and print restrictions",
+      "Instant browser-based decryption",
+      "Zero data transmission",
+      "Full formatting retention"
+    ],
+    faqs: [
+      { question: "Does this require the original password?", answer: "Yes, you must know the password to legally decrypt and strip security." }
+    ],
+    supportedFormats: [".pdf"],
+    maxFileSizeMB: 50
+  },
+  {
+    id: "tool-pdf-organize",
+    slug: "pdf-organize",
+    name: "Organize PDF",
+    shortDesc: "Rearrange, delete, and sort PDF pages with interactive visual cards.",
+    category: "paper-portal",
+    categoryName: "PDF Tools",
+    gadgetName: "Paper Portal",
+    icon: "Move",
+    tags: ["pdf", "organize", "reorder", "delete pages"],
+    isPopular: true,
+    description: "Sort, shuffle, duplicate, or delete individual pages from your document using intuitive visual drag-and-drop cards.",
+    howToUse: [
+      "Upload your PDF document.",
+      "Use arrow buttons to move pages left or right, or trash icon to delete unwanted pages.",
+      "Click 'Save & Download Organized PDF'.",
+      "Download your cleanly restructured document."
+    ],
+    features: [
+      "Visual page card thumbnails",
+      "Single-click delete and repositioning",
+      "Maintains original vector clarity",
+      "Zero server latency"
+    ],
+    faqs: [
+      { question: "Can I delete multiple pages at once?", answer: "Yes, simply click the trash icon on each unwanted page." }
+    ],
+    supportedFormats: [".pdf"],
+    maxFileSizeMB: 50
+  },
+  {
+    id: "tool-pdf-to-text",
+    slug: "pdf-to-text",
+    name: "PDF to Text",
+    shortDesc: "Extract all selectable plain text with preserved line breaks.",
+    category: "paper-portal",
+    categoryName: "PDF Tools",
+    gadgetName: "Paper Portal",
+    icon: "FileCode",
+    tags: ["pdf", "text", "extract", "txt"],
+    isPopular: false,
+    description: "Extract clean, editable text content from your PDF documents. Copy to clipboard or download as a .TXT file.",
+    howToUse: [
+      "Upload your PDF document.",
+      "Inspect the extracted text in the live editor.",
+      "Click 'Copy Full Text' or 'Download .TXT File'.",
+      "Paste into Word, Google Docs, or your code editor."
+    ],
+    features: [
+      "Instant plain text extraction",
+      "One-click copy to clipboard",
+      "Downloadable .TXT export",
+      "100% private in-browser processing"
+    ],
+    faqs: [
+      { question: "Does it work on scanned documents?", answer: "It works best on digital PDFs containing real selectable text." }
+    ],
+    supportedFormats: [".pdf"],
+    maxFileSizeMB: 50
+  },
 
   // --- Category 2: Magic Lens (Image Tools) ---
   {

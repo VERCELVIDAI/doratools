@@ -61,13 +61,13 @@ export function PortalHero() {
           {/* Left Column: Headline & Magic Search */}
           <div className="flex-1 text-center lg:text-left">
             {/* Pill Tag */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 border border-dora-border shadow-dora-sm text-dora-blue text-xs sm:text-sm font-semibold mb-6 animate-bounce">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-ultra shadow-glass text-dora-blue text-xs sm:text-sm font-semibold mb-6 animate-bounce">
               <Sparkles className="w-4 h-4 text-dora-yellow" />
-              <span>50 Functional Magical Gadgets Ready to Use</span>
+              <span>58+ Supercharged Gadgets • 100% Free & Private</span>
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-dora-text tracking-tight leading-[1.15]">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-dora-text tracking-tight leading-[1.15]">
               Welcome to Your <br className="hidden sm:inline" />
               <span className="bg-gradient-to-r from-dora-deep via-dora-blue to-dora-sky bg-clip-text text-transparent">
                 Digital Gadget Universe!
@@ -75,44 +75,45 @@ export function PortalHero() {
             </h1>
 
             {/* Subheading */}
-            <p className="mt-5 text-lg sm:text-xl text-dora-textLight max-w-xl mx-auto lg:mx-0 leading-relaxed font-normal">
-              Every problem has a gadget. Discover magical tools that make your everyday work faster, easier, and smarter — right in your browser with 100% privacy.
+            <p className="mt-4 sm:mt-5 text-sm sm:text-lg text-dora-textLight max-w-xl mx-auto lg:mx-0 leading-relaxed font-normal">
+              Every problem has a gadget. Discover powerful browser-based tools that make your everyday work faster, easier, and smarter — with 100% client-side privacy.
             </p>
 
             {/* Interactive Magic Search Input */}
-            <form onSubmit={handleSearchSubmit} className="mt-8 max-w-lg mx-auto lg:mx-0">
-              <div className="relative flex items-center p-2 rounded-2xl bg-white/90 backdrop-blur-lg border-2 border-dora-border shadow-dora-card focus-within:border-dora-blue focus-within:shadow-dora-hover transition-all">
-                <Search className="w-6 h-6 text-dora-blue ml-3 shrink-0" />
+            <form onSubmit={handleSearchSubmit} className="mt-6 sm:mt-8 max-w-lg mx-auto lg:mx-0">
+              <div className="relative flex items-center p-1.5 sm:p-2 rounded-2xl glass-ultra border-2 border-white shadow-glass focus-within:border-dora-blue focus-within:shadow-dora-hover transition-all">
+                <Search className="w-5 h-5 sm:w-6 sm:h-6 text-dora-blue ml-2 sm:ml-3 shrink-0" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search 50 tools (e.g. merge pdf, compress image, gst, qr)..."
-                  className="w-full px-3 py-2.5 bg-transparent text-dora-text placeholder-dora-textLight/70 text-sm sm:text-base focus:outline-none"
+                  placeholder="Search 58 tools (e.g. merge pdf, compress, sign, qr)..."
+                  className="w-full px-2.5 sm:px-3 py-2 bg-transparent text-dora-text placeholder-dora-textLight/70 text-xs sm:text-base focus:outline-none"
                 />
                 <button
                   type="submit"
-                  className="shrink-0 px-5 py-2.5 rounded-xl bg-gradient-to-r from-dora-blue to-dora-deep text-white font-semibold text-sm sm:text-base shadow-md hover:opacity-95 active:scale-95 transition-all flex items-center gap-1.5"
+                  className="shrink-0 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-gradient-to-r from-dora-blue to-dora-deep text-white font-bold text-xs sm:text-sm shadow-md hover:opacity-95 active:scale-95 transition-all flex items-center gap-1.5"
                 >
                   <span>Search</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </button>
               </div>
 
               {/* Quick Suggestion Pills */}
-              <div className="mt-3 flex flex-wrap items-center justify-center lg:justify-start gap-2 text-xs text-dora-textLight">
-                <span className="font-medium text-dora-text">Popular:</span>
+              <div className="mt-3 flex flex-wrap items-center justify-center lg:justify-start gap-1.5 sm:gap-2 text-xs text-dora-textLight">
+                <span className="font-bold text-dora-text">Popular:</span>
                 {[
-                  { name: "PDF Merger", slug: "pdf-merger" },
+                  { name: "Merge PDF", slug: "pdf-merger" },
+                  { name: "Compress PDF", slug: "pdf-compressor" },
+                  { name: "Sign PDF", slug: "sign-pdf" },
                   { name: "Image Compressor", slug: "image-compressor" },
                   { name: "GST Calculator", slug: "gst-calculator" },
-                  { name: "JSON Formatter", slug: "json-formatter" },
                   { name: "WiFi QR", slug: "wifi-qr-generator" },
                 ].map((item) => (
                   <Link
                     key={item.slug}
                     href={`/tools/${item.slug}`}
-                    className="px-2.5 py-1 rounded-lg bg-white/80 hover:bg-dora-lightSky border border-dora-border text-dora-deep hover:text-dora-blue transition-colors font-medium shadow-xs"
+                    className="px-2.5 py-1 rounded-lg glass-ultra hover:bg-dora-lightSky border border-white/80 text-dora-deep hover:text-dora-blue transition-colors font-medium shadow-2xs active:scale-95"
                   >
                     {item.name}
                   </Link>
@@ -121,19 +122,19 @@ export function PortalHero() {
             </form>
 
             {/* CTAs */}
-            <div className="mt-8 flex flex-wrap items-center justify-center lg:justify-start gap-4">
+            <div className="mt-6 sm:mt-8 flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4">
               <Link
                 href="/tools"
-                className="px-7 py-3.5 rounded-2xl bg-gradient-to-r from-dora-blue to-dora-deep text-white font-bold text-base shadow-dora-hover hover:scale-105 active:scale-95 transition-all flex items-center gap-2"
+                className="w-full sm:w-auto px-6 sm:px-7 py-3 sm:py-3.5 rounded-2xl bg-gradient-to-r from-dora-blue to-dora-deep text-white font-bold text-sm sm:text-base shadow-dora-hover hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2"
               >
-                <Sparkles className="w-5 h-5 text-dora-yellow" />
-                <span>Explore All 50 Gadgets</span>
+                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-dora-yellow" />
+                <span>Explore All 58 Gadgets</span>
               </Link>
               <Link
-                href="/pricing"
-                className="px-7 py-3.5 rounded-2xl bg-white/90 backdrop-blur-md border border-dora-border text-dora-text font-bold text-base shadow-dora-sm hover:bg-dora-lightSky active:scale-95 transition-all"
+                href="/categories/paper-portal"
+                className="w-full sm:w-auto px-6 sm:px-7 py-3 sm:py-3.5 rounded-2xl glass-ultra border border-white/80 text-dora-text font-bold text-sm sm:text-base shadow-glass hover:bg-white active:scale-95 transition-all text-center"
               >
-                <span>Start Free</span>
+                <span>iLovePDF Suite (13 Tools)</span>
               </Link>
             </div>
 

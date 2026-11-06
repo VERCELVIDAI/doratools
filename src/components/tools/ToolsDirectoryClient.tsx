@@ -57,9 +57,9 @@ function ToolsDirectoryInner() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page Header */}
         <div className="text-center max-w-3xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-dora-border shadow-xs text-dora-deep text-xs font-bold uppercase tracking-wider mb-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-ultra shadow-glass text-dora-deep text-xs font-bold uppercase tracking-wider mb-3">
             <Sparkles className="w-3.5 h-3.5 text-dora-yellow" />
-            <span>50 Functional Magical Gadgets</span>
+            <span>58+ Supercharged Magical Gadgets</span>
           </div>
           <h1 className="text-3xl sm:text-5xl font-black text-dora-text tracking-tight">
             Explore All Digital Gadgets
@@ -70,7 +70,7 @@ function ToolsDirectoryInner() {
         </div>
 
         {/* Search & Filter Toolbar */}
-        <div className="bg-white/90 backdrop-blur-md border border-dora-border rounded-3xl p-4 sm:p-6 shadow-dora-card mb-8">
+        <div className="glass-ultra shadow-glass border border-white/80 rounded-3xl p-4 sm:p-6 mb-8">
           <div className="flex flex-col md:flex-row items-center gap-4">
             {/* Search Input */}
             <div className="relative flex-1 w-full">
@@ -79,8 +79,8 @@ function ToolsDirectoryInner() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search tools by name, tag, or keyword (e.g., pdf, resize, gst, qr, resume)..."
-                className="w-full pl-12 pr-4 py-3 rounded-2xl bg-[#F8FBFF] border border-dora-border text-dora-text placeholder-slate-400 focus:outline-none focus:border-dora-blue transition-colors text-sm sm:text-base font-medium"
+                placeholder="Search tools by name, tag, or keyword (e.g., pdf, merge, sign, compress, gst, qr)..."
+                className="w-full pl-12 pr-4 py-3 rounded-2xl bg-white/70 border border-slate-200/80 text-dora-text placeholder-slate-400 focus:outline-none focus:border-dora-blue transition-colors text-sm sm:text-base font-medium"
               />
               {searchQuery && (
                 <button
@@ -95,10 +95,10 @@ function ToolsDirectoryInner() {
             {/* Favorite Filter Toggle */}
             <button
               onClick={() => setShowOnlyFavorites(!showOnlyFavorites)}
-              className={`shrink-0 px-4 py-3 rounded-2xl font-bold text-sm flex items-center gap-2 transition-all ${
+              className={`shrink-0 px-4 py-3 rounded-2xl font-bold text-sm flex items-center gap-2 transition-all active:scale-95 ${
                 showOnlyFavorites
                   ? "bg-amber-100 text-amber-900 border border-amber-300 shadow-xs"
-                  : "bg-[#F8FBFF] border border-dora-border text-dora-text hover:bg-slate-100"
+                  : "bg-white/70 border border-slate-200/80 text-dora-text hover:bg-white"
               }`}
             >
               <Star
@@ -111,29 +111,29 @@ function ToolsDirectoryInner() {
           </div>
 
           {/* Category Tabs Scroll */}
-          <div className="mt-5 pt-4 border-t border-slate-100 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+          <div className="mt-5 pt-4 border-t border-slate-200/50 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none -mx-2 px-2">
             <button
               onClick={() => setSelectedCategory("all")}
-              className={`shrink-0 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+              className={`shrink-0 px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 ${
                 selectedCategory === "all"
-                  ? "bg-dora-blue text-white shadow-xs"
-                  : "bg-slate-100 text-dora-text hover:bg-slate-200"
+                  ? "bg-gradient-to-r from-dora-blue to-dora-deep text-white shadow-xs"
+                  : "bg-white/80 text-dora-text hover:bg-white border border-slate-200/60"
               }`}
             >
-              All Tools (50)
+              All Tools ({TOOLS.length})
             </button>
             {CATEGORIES.map((cat) => (
               <button
                 key={cat.slug}
                 onClick={() => setSelectedCategory(cat.slug)}
-                className={`shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                className={`shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 active:scale-95 ${
                   selectedCategory === cat.slug
                     ? "bg-dora-deep text-white shadow-xs"
-                    : "bg-slate-100 text-dora-text hover:bg-slate-200"
+                    : "bg-white/80 text-dora-text hover:bg-white border border-slate-200/60"
                 }`}
               >
                 <span>{cat.name}</span>
-                <span className="text-[10px] opacity-75">(5)</span>
+                <span className="text-[10px] opacity-80">({cat.toolsCount})</span>
               </button>
             ))}
           </div>
@@ -168,15 +168,20 @@ function ToolsDirectoryInner() {
                 <Link
                   key={tool.slug}
                   href={`/tools/${tool.slug}`}
-                  className="group relative flex flex-col p-6 rounded-3xl bg-white border border-dora-border shadow-dora-card hover:shadow-dora-hover hover:-translate-y-1.5 transition-all duration-300"
+                  className="group relative flex flex-col p-5 sm:p-6 rounded-3xl glass-ultra shadow-glass hover:shadow-dora-hover hover:-translate-y-1.5 transition-all duration-300 border border-white/80 active:scale-98"
                 >
                   {/* Top Bar: Icon & Category & Favorite Star */}
                   <div className="flex items-start justify-between mb-4">
-                    <div className="w-12 h-12 rounded-2xl bg-dora-lightSky border border-dora-border/60 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-white to-dora-lightSky border border-dora-sky/30 shadow-2xs flex items-center justify-center group-hover:scale-110 transition-transform">
                       <GadgetIllustration categorySlug={tool.category} size="sm" animate={false} />
                     </div>
 
                     <div className="flex items-center gap-1.5">
+                      {tool.isNew && (
+                        <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">
+                          New
+                        </span>
+                      )}
                       {tool.isPopular && (
                         <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200">
                           Popular

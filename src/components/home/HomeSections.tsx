@@ -25,51 +25,53 @@ import { DoraBot } from "../mascot/DoraBot";
 // --- SECTION 4: EXPLORE GADGETS (10 Categories) ---
 export function ExploreGadgetsSection() {
   return (
-    <section className="py-20 bg-white relative">
+    <section className="py-16 sm:py-24 bg-gradient-to-b from-white to-[#F5FAFF] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-dora-lightSky border border-dora-border text-dora-deep text-xs font-bold uppercase tracking-wider mb-3">
+        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-ultra shadow-glass text-dora-deep text-xs font-bold uppercase tracking-wider mb-3">
             <Sparkles className="w-3.5 h-3.5 text-dora-yellow" />
             <span>10 Magical Pocket Categories</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-black text-dora-text tracking-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-dora-text tracking-tight">
             Explore the Digital Gadget Universe
           </h2>
-          <p className="mt-4 text-base sm:text-lg text-dora-textLight">
-            Every category is powered by its own original magical gadget. Browse all 10 specialized portals with 50 browser-based tools.
+          <p className="mt-3 sm:mt-4 text-sm sm:text-base lg:text-lg text-dora-textLight">
+            Every category is powered by its own original magical gadget. Browse all 10 specialized portals featuring 58+ browser-based tools.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-6">
           {CATEGORIES.map((cat) => (
             <Link
               key={cat.slug}
               href={`/categories/${cat.slug}`}
-              className="group relative flex flex-col p-6 rounded-3xl bg-gradient-to-b from-white to-[#F8FBFF] border border-dora-border shadow-dora-card hover:shadow-dora-hover hover:-translate-y-1.5 transition-all duration-300"
+              className="group relative flex flex-col p-4 sm:p-6 rounded-3xl glass-ultra shadow-glass hover:shadow-dora-hover hover:-translate-y-1.5 transition-all duration-300 border border-white/80 active:scale-95"
             >
               {/* Category Gadget Artwork */}
-              <div className="w-20 h-20 mx-auto flex items-center justify-center mb-4 rounded-2xl bg-white shadow-dora-sm border border-dora-border/60 group-hover:scale-110 transition-transform">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto flex items-center justify-center mb-3 sm:mb-4 rounded-2xl bg-white/90 shadow-sm border border-dora-border/60 group-hover:scale-110 transition-transform">
                 <GadgetIllustration categorySlug={cat.slug} size="md" />
               </div>
 
               {/* Title & Tagline */}
               <div className="text-center flex-1 flex flex-col justify-between">
                 <div>
-                  <span className="text-[11px] font-bold tracking-wider uppercase text-dora-deep">
+                  <span className="text-[10px] sm:text-[11px] font-black tracking-wider uppercase text-dora-deep block truncate">
                     {cat.gadgetName}
                   </span>
-                  <h3 className="text-lg font-black text-dora-text mt-0.5 group-hover:text-dora-blue transition-colors">
+                  <h3 className="text-sm sm:text-lg font-black text-dora-text mt-0.5 group-hover:text-dora-blue transition-colors line-clamp-1 sm:line-clamp-none">
                     {cat.name}
                   </h3>
-                  <p className="mt-2 text-xs text-dora-textLight line-clamp-2 leading-relaxed">
+                  <p className="mt-1.5 text-xs text-dora-textLight line-clamp-2 leading-relaxed hidden sm:block">
                     {cat.tagline}
                   </p>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-dora-blue">
-                  <span>5 Tools</span>
+                <div className="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-slate-200/50 flex items-center justify-between text-[11px] sm:text-xs font-bold text-dora-blue">
+                  <span className="px-2 py-0.5 rounded-md bg-sky-50 text-dora-deep border border-sky-200/60 font-black">
+                    {cat.toolsCount} Tools
+                  </span>
                   <span className="group-hover:translate-x-1 transition-transform flex items-center">
-                    Enter <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                    Enter <ArrowRight className="w-3.5 h-3.5 ml-0.5" />
                   </span>
                 </div>
               </div>
@@ -81,59 +83,110 @@ export function ExploreGadgetsSection() {
   );
 }
 
-// --- SECTION 5: POPULAR GADGETS ---
+// --- SECTION 5: POPULAR GADGETS (iLovePDF Style Interactive Multi-Tool Grid) ---
 export function PopularGadgetsSection() {
-  const popularTools = TOOLS.filter((t) => t.isPopular).slice(0, 8);
+  const [selectedCategory, setSelectedCategory] = useState<string>("popular");
+
+  const filterTabs = [
+    { id: "popular", label: "🔥 Top Tools", count: 8 },
+    { id: "paper-portal", label: "📄 PDF Suite (13)", count: 13 },
+    { id: "magic-lens", label: "🖼️ Image Tools", count: 5 },
+    { id: "code-capsule", label: "💻 Developer", count: 5 },
+    { id: "number-machine", label: "🔢 Calculators", count: 5 },
+    { id: "scan-portal", label: "📱 QR Codes", count: 5 },
+    { id: "smart-pocket", label: "💼 Productivity", count: 5 },
+    { id: "all", label: "✨ All 58 Gadgets", count: TOOLS.length },
+  ];
+
+  const displayedTools =
+    selectedCategory === "popular"
+      ? TOOLS.filter((t) => t.isPopular)
+      : selectedCategory === "all"
+      ? TOOLS
+      : TOOLS.filter((t) => t.category === selectedCategory);
 
   return (
-    <section className="py-20 bg-gradient-to-b from-white to-[#F5FAFF] relative">
+    <section className="py-16 sm:py-24 bg-gradient-to-b from-[#F5FAFF] via-white to-[#F0F7FF] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12 gap-4">
           <div>
             <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-dora-blue mb-2">
               <Star className="w-4 h-4 fill-dora-yellow text-dora-yellow" />
-              <span>Most Summoned Gadgets</span>
+              <span>Full Browser-Powered Suite</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-black text-dora-text tracking-tight">
-              Popular Everyday Tools
+            <h2 className="text-2xl sm:text-4xl font-black text-dora-text tracking-tight">
+              Every Gadget You Need in One Place
             </h2>
+            <p className="text-xs sm:text-sm text-dora-textLight mt-1.5 max-w-xl">
+              Just like iLovePDF, but with complete client-side security and 10 gadget pockets for PDF, Images, Code, Calculators, and QR codes.
+            </p>
           </div>
           <Link
             href="/tools"
-            className="inline-flex items-center gap-1.5 text-sm font-bold text-dora-deep hover:text-dora-blue group"
+            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-dora-deep hover:text-dora-blue group shrink-0"
           >
-            <span>View All 50 Tools</span>
+            <span>Browse All {TOOLS.length} Tools</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {popularTools.map((tool) => (
+        {/* Horizontal Category Tab Bar (Mobile Swipeable) */}
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-3 mb-6 sm:mb-8 -mx-4 px-4 sm:mx-0 sm:px-0">
+          {filterTabs.map((tab) => {
+            const isActive = selectedCategory === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setSelectedCategory(tab.id)}
+                className={`px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold shrink-0 transition-all active:scale-95 flex items-center gap-1.5 ${
+                  isActive
+                    ? "bg-gradient-to-r from-dora-blue to-dora-deep text-white shadow-dora-sm"
+                    : "glass-ultra text-dora-text hover:bg-white border border-white/80"
+                }`}
+              >
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Tool Cards Grid — Glass Blur & Responsive */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+          {displayedTools.map((tool) => (
             <Link
               key={tool.slug}
               href={`/tools/${tool.slug}`}
-              className="flex flex-col p-6 rounded-3xl bg-white/90 backdrop-blur-md border border-dora-border shadow-dora-card hover:shadow-dora-hover hover:-translate-y-1 transition-all group"
+              className="flex flex-col p-5 sm:p-6 rounded-3xl glass-ultra shadow-glass hover:shadow-dora-hover hover:-translate-y-1 transition-all duration-300 group border border-white/80 relative active:scale-98"
             >
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 rounded-2xl bg-dora-lightSky flex items-center justify-center text-dora-deep group-hover:scale-110 transition-transform">
+              <div className="flex items-center justify-between mb-3.5">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-white to-dora-lightSky border border-dora-sky/30 shadow-2xs flex items-center justify-center text-dora-deep group-hover:scale-110 transition-transform">
                   <GadgetIllustration categorySlug={tool.category} size="sm" animate={false} />
                 </div>
-                <span className="text-[10px] font-bold uppercase px-2.5 py-1 rounded-full bg-sky-50 text-dora-deep border border-dora-border">
-                  {tool.gadgetName}
-                </span>
+                <div className="flex items-center gap-1.5">
+                  {tool.isNew && (
+                    <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      NEW
+                    </span>
+                  )}
+                  <span className="text-[10px] font-bold uppercase px-2.5 py-1 rounded-full bg-sky-50 text-dora-deep border border-dora-border/70">
+                    {tool.gadgetName}
+                  </span>
+                </div>
               </div>
 
-              <h3 className="text-base font-bold text-dora-text group-hover:text-dora-blue transition-colors">
+              <h3 className="text-base font-black text-dora-text group-hover:text-dora-blue transition-colors">
                 {tool.name}
               </h3>
-              <p className="mt-2 text-xs text-dora-textLight leading-relaxed flex-1">
+              <p className="mt-1.5 text-xs text-dora-textLight leading-relaxed flex-1 line-clamp-2">
                 {tool.shortDesc}
               </p>
 
-              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-dora-textLight">
-                <span className="font-semibold text-dora-text">Free Forever</span>
+              <div className="mt-4 pt-3 border-t border-slate-200/50 flex items-center justify-between text-xs text-dora-textLight">
+                <span className="font-bold text-emerald-600 flex items-center gap-1 text-[11px]">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" /> Client-Side
+                </span>
                 <span className="text-dora-blue font-bold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                  Use Tool <ArrowRight className="w-3.5 h-3.5" />
+                  Use Gadget <ArrowRight className="w-3.5 h-3.5" />
                 </span>
               </div>
             </Link>
@@ -229,7 +282,7 @@ export function WhyDoraToolsSection() {
       icon: Smile,
       color: "text-dora-blue",
       bg: "bg-sky-50",
-      title: "50 Free Ready Gadgets",
+      title: "58+ Free Ready Gadgets",
       desc: "Every single tool is fully functional without mandatory card payments or hidden paywalls on core utilities.",
     },
     {
@@ -462,7 +515,7 @@ export function LatestToolsSection() {
             href="/tools"
             className="text-xs font-bold text-dora-deep hover:text-dora-blue flex items-center gap-1"
           >
-            All 50 Tools <ArrowRight className="w-3.5 h-3.5" />
+            All {TOOLS.length} Tools <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 

@@ -29,7 +29,7 @@ export function Footer() {
               &quot;Your Digital Gadget Universe!&quot;
             </p>
             <p className="text-xs text-dora-textLight leading-relaxed max-w-sm">
-              &quot;Every Problem Has a Gadget.&quot; Discover 50 client-side magical gadgets designed for creators, developers, founders, and professionals. 100% private, fast, and browser-powered.
+              &quot;Every Problem Has a Gadget.&quot; Discover 58+ client-side magical gadgets including full iLovePDF-grade PDF suite. Designed for creators, developers, founders, and professionals. 100% private, fast, and browser-powered.
             </p>
 
             <div className="flex items-center gap-3 pt-2 text-dora-textLight">
@@ -63,7 +63,7 @@ export function Footer() {
                     className="text-dora-textLight hover:text-dora-blue transition-colors font-medium flex items-center justify-between group"
                   >
                     <span>{cat.name}</span>
-                    <span className="text-[10px] text-slate-400 group-hover:text-dora-blue">5 tools</span>
+                    <span className="text-[10px] text-slate-400 group-hover:text-dora-blue">{cat.toolsCount} tools</span>
                   </Link>
                 </li>
               ))}
@@ -83,7 +83,7 @@ export function Footer() {
                     className="text-dora-textLight hover:text-dora-blue transition-colors font-medium flex items-center justify-between group"
                   >
                     <span>{cat.name}</span>
-                    <span className="text-[10px] text-slate-400 group-hover:text-dora-blue">5 tools</span>
+                    <span className="text-[10px] text-slate-400 group-hover:text-dora-blue">{cat.toolsCount} tools</span>
                   </Link>
                 </li>
               ))}

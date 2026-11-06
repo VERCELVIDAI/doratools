@@ -4,13 +4,21 @@ import { notFound } from "next/navigation";
 import { getToolBySlug, TOOLS } from "@/lib/tools-data";
 import { ToolLayout } from "@/components/tools/ToolLayout";
 
-// Category 1: PDF Tools
+// Category 1: PDF Tools (Complete iLovePDF Suite)
 import {
   PdfMergerTool,
   PdfSplitterTool,
   PdfCompressorTool,
   PdfToJpgTool,
   JpgToPdfTool,
+  PdfRotateTool,
+  PdfWatermarkTool,
+  PdfPageNumbersTool,
+  SignPdfTool,
+  PdfProtectTool,
+  PdfUnlockTool,
+  PdfOrganizeTool,
+  PdfToTextTool,
 } from "@/components/tools/implementations/PdfTools";
 
 // Category 2: Image Tools
@@ -142,7 +150,7 @@ export default function ToolPage({ params }: { params: { slug: string } }) {
 
   const renderToolComponent = () => {
     switch (tool.slug) {
-      // PDF Tools
+      // PDF Tools (Full iLovePDF Suite)
       case "pdf-merger":
         return <PdfMergerTool />;
       case "pdf-splitter":
@@ -153,6 +161,22 @@ export default function ToolPage({ params }: { params: { slug: string } }) {
         return <PdfToJpgTool />;
       case "jpg-to-pdf":
         return <JpgToPdfTool />;
+      case "pdf-rotate":
+        return <PdfRotateTool />;
+      case "pdf-watermark":
+        return <PdfWatermarkTool />;
+      case "pdf-page-numbers":
+        return <PdfPageNumbersTool />;
+      case "sign-pdf":
+        return <SignPdfTool />;
+      case "pdf-protect":
+        return <PdfProtectTool />;
+      case "pdf-unlock":
+        return <PdfUnlockTool />;
+      case "pdf-organize":
+        return <PdfOrganizeTool />;
+      case "pdf-to-text":
+        return <PdfToTextTool />;
 
       // Image Tools
       case "image-compressor":

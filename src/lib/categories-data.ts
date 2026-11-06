@@ -12,8 +12,8 @@ export const CATEGORIES: ToolCategory[] = [
     color: "#E11D48",
     gradient: "from-rose-500 to-red-600",
     accentColor: "rgba(225, 29, 72, 0.12)",
-    toolsCount: 5,
-    featuredTools: ["pdf-merger", "pdf-splitter", "pdf-compressor", "pdf-to-jpg", "jpg-to-pdf"]
+    toolsCount: 13,
+    featuredTools: ["pdf-merger", "pdf-splitter", "pdf-compressor", "pdf-to-jpg", "jpg-to-pdf", "pdf-rotate", "pdf-watermark", "pdf-page-numbers", "sign-pdf", "pdf-protect", "pdf-unlock", "pdf-organize", "pdf-to-text"]
   },
   {
     id: "cat-2",

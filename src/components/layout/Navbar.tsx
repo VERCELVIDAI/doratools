@@ -21,14 +21,15 @@ export function Navbar() {
 
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "Explore Tools", href: "/tools" },
+    { name: "PDF Suite", href: "/categories/paper-portal" },
+    { name: "Explore All (58)", href: "/tools" },
     { name: "Categories", href: "/categories" },
     { name: "Pricing", href: "/pricing" },
     { name: "Blog", href: "/blog" },
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-dora-border/70 shadow-xs transition-all">
+    <header className="sticky top-0 z-50 w-full glass-ultra border-b border-white/70 shadow-glass transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
         {/* Brand Logo & Mascot Icon */}
         <Link href="/" className="flex items-center gap-2.5 group">
@@ -57,10 +58,10 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`px-3.5 py-2 rounded-xl text-sm font-semibold transition-all ${
+                className={`px-3.5 py-2 rounded-xl text-sm font-bold transition-all ${
                   isActive
-                    ? "bg-dora-lightSky text-dora-deep shadow-xs"
-                    : "text-dora-text hover:text-dora-blue hover:bg-slate-50"
+                    ? "bg-dora-lightSky text-dora-deep shadow-xs border border-sky-200/60"
+                    : "text-dora-text hover:text-dora-blue hover:bg-white/60"
                 }`}
               >
                 {link.name}
@@ -75,7 +76,7 @@ export function Navbar() {
             <div className="flex items-center gap-2">
               <Link
                 href="/dashboard"
-                className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-dora-border shadow-xs hover:border-dora-blue text-dora-text text-sm font-semibold transition-all"
+                className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/90 border border-dora-border shadow-xs hover:border-dora-blue text-dora-text text-sm font-semibold transition-all"
               >
                 <div className="w-6 h-6 rounded-full bg-dora-sky/20 text-dora-deep flex items-center justify-center text-xs font-bold">
                   {user.name.charAt(0)}
@@ -114,10 +115,10 @@ export function Navbar() {
         {/* Mobile Hamburger Button */}
         <div className="md:hidden flex items-center gap-2">
           <Link
-            href="/tools"
-            className="px-3 py-1.5 rounded-lg bg-dora-blue text-white text-xs font-bold"
+            href="/categories/paper-portal"
+            className="px-2.5 py-1.5 rounded-lg bg-sky-50 text-dora-deep text-xs font-bold border border-sky-200"
           >
-            Tools
+            PDF Tools
           </Link>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -131,21 +132,21 @@ export function Navbar() {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-dora-border bg-white/95 backdrop-blur-xl px-4 pt-3 pb-6 space-y-3 animate-in slide-in-from-top-4">
+        <div className="md:hidden border-b border-dora-border glass-ultra px-4 pt-3 pb-6 space-y-3 animate-in slide-in-from-top-4">
           <div className="grid grid-cols-2 gap-2">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="px-4 py-3 rounded-xl bg-dora-lightSky/60 text-sm font-bold text-dora-text hover:bg-dora-lightSky"
+                className="px-4 py-3 rounded-xl bg-white/70 text-sm font-bold text-dora-text hover:bg-white border border-slate-200/50"
               >
                 {link.name}
               </Link>
             ))}
           </div>
 
-          <div className="pt-2 border-t border-slate-100 flex flex-col gap-2">
+          <div className="pt-2 border-t border-slate-200/60 flex flex-col gap-2">
             <Link
               href="/dashboard"
               onClick={() => setMobileMenuOpen(false)}
